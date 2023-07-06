@@ -39,6 +39,17 @@
     }
 }
 
+@keyframes moveltr {
+    from {
+        -webkit-background-position: 0 0;
+        background-position: 0 0;
+    }
+    to {
+        -webkit-background-position: 8.5rem 0;
+        background-position: 8.5rem 0;
+    }
+}
+
 
 .magic {
     background: linear-gradient(
