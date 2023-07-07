@@ -3,15 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build",
+    "dev": "prisma generate && next dev",
+    "build": "prisma generate && prisma db push && prisma db seed && next build",
     "start": "next start",
     "lint": "next lint"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "devDependencies": {
     "prisma": "^4.16.2"
   },
   "dependencies": {
+    "ts-node": "^10.9.1",
     "@emotion/react": "^11.11.1",
     "@mantine/core": "^6.0.16",
     "@mantine/hooks": "^6.0.16",
