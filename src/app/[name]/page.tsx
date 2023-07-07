@@ -3,12 +3,25 @@ import {capitalize} from "@/app/util";
 import MoodMeter from "@/app/components/MoodMeter";
 import {Alert} from "@mantine/core";
 import React from "react";
+import moodMeter from "@/app/components/MoodMeter";
 
 type Params = {
     params: {
         name: string
     }
 }
+
+async function updateSourness(id: string, value: number) {
+    "use server"
+    console.log("calling update mood")
+    const updatedMood = await prisma.sourness.update({
+        where: {id: id},
+        data: {value: value}
+    })
+
+    console.log(updatedMood)
+}
+
 
 export default async function SournessPage({params: {name}}: Params) {
 
@@ -27,7 +40,7 @@ export default async function SournessPage({params: {name}}: Params) {
     return (
         <>
             <h3 className={"text-5xl text-center p-12"}>Wie ist {capitalize(name)} drauf? </h3>
-            {sourness ? <MoodMeter value={sourness.value}/> :
+            {sourness ? <MoodMeter moodId={sourness.id} mood={sourness.value} updateMood={updateSourness}/> :
                 "no data found"}
         </>
     )

@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-    <body className={`bg-slate-800 text-slate-200 container mx-auto p-4 ${inter.className}`}>{children}</body>
+    <body className={`bg-slate-800 text-slate-200 container mx-auto p-12 ${inter.className}`}>{children}</body>
     </html>
   )
 }
