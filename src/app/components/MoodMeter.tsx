@@ -1,7 +1,7 @@
 "use client"
 
-import React, {useState} from 'react';
-import {Progress, Slider} from "@mantine/core";
+import React, {useEffect, useState} from 'react';
+import {Progress, rem, Slider} from "@mantine/core";
 import {IconHeart, IconHeartBroken} from '@tabler/icons-react';
 
 
@@ -13,10 +13,11 @@ interface MoodMeterProps {
 
 interface MoodSliderProps extends MoodMeterProps {
     moodId: string
+    moodColor: { primary: string, secondary: string }
     onMoodChange: (e: number) => void
 }
 
-const MoodSlider = ({moodId, mood, updateMood, onMoodChange}: MoodSliderProps) => {
+const MoodSlider = ({moodId, mood, moodColor, updateMood, onMoodChange}: MoodSliderProps) => {
 
     const onMoodChangeEnd = (e: number) => {
         console.log(e)
@@ -39,8 +40,9 @@ const MoodSlider = ({moodId, mood, updateMood, onMoodChange}: MoodSliderProps) =
             onChange={onMoodChange}
             onChangeEnd={onMoodChangeEnd}
 
-            thumbSize={20}
-            thumbChildren={mood >= 50 ? <IconHeart size="1rem"/> : <IconHeartBroken size="1rem"/>}
+            thumbSize={24}
+            thumbChildren={mood >= 50 ? <IconHeart color={moodColor.primary} size={rem(48)}/> :
+                <IconHeartBroken color={moodColor.primary} size={rem(48)}/>}
 
             min={0}
             max={100}
@@ -52,7 +54,19 @@ const MoodSlider = ({moodId, mood, updateMood, onMoodChange}: MoodSliderProps) =
             labelTransition="skew-down"
             labelTransitionDuration={150}
             labelTransitionTimingFunction="ease"
-            // styles={{ markLabel: { display: 'none' } }}
+
+            styles={{
+                bar: {
+                    transition: "background-color 1s ease-out",
+                    backgroundColor: `${moodColor.primary}`
+                },
+                thumb: {
+                    transition: "background-color 1s ease-out",
+                    border: `2px solid ${moodColor.primary}`,
+                    padding: rem(0),
+                    backgroundColor: `${moodColor.secondary}`
+                },
+            }}
         />
     )
 }
@@ -61,6 +75,25 @@ const MoodMeter = ({moodId, mood = 100, updateMood}: MoodMeterProps) => {
 
     const [moodValue, setMoodValue] = useState(mood);
     const [inEditMode, setInEditMode] = useState(true);
+    const [color, setColor] = useState({primary: '#489380', secondary: '#77dfa9'});
+
+    const MOOD_COLORS = {
+        "good": {primary: '#489380', secondary: '#77dfa9'},
+        "medium": {primary: '#EB8014', secondary: '#fdbf68'},
+        "bad": {primary: '#D75050', secondary: '#e96d75'}
+    }
+
+    useEffect(() => {
+        if (moodValue > 70) {
+            setColor(MOOD_COLORS.good)
+            return
+        }
+        if (moodValue > 40) {
+            setColor(MOOD_COLORS.medium)
+            return
+        }
+        setColor(MOOD_COLORS.bad)
+    }, [moodValue])
 
     return (
         <>
@@ -68,16 +101,22 @@ const MoodMeter = ({moodId, mood = 100, updateMood}: MoodMeterProps) => {
                 <MoodSlider moodId={moodId}
                             mood={moodValue}
                             onMoodChange={setMoodValue}
-                            updateMood={updateMood}/> : null}
+                            updateMood={updateMood} moodColor={color}/> : null}
             <Progress className={"h-16"}
                       value={moodValue}
                       aria-valuemin={0}
                       aria-valuemax={100}
                       styles={{
+                          root: {
+                              transition: "background-color 1s ease-out",
+                              backgroundColor: `${color.secondary}`
+                          },
                           bar: {
                               backgroundSize: "4.25rem 4.25rem",
                               backgroundImage: "linear-gradient(90deg, rgba(255, 255, 255, 0.05) 50%, transparent 15%, transparent)",
-                              animation: "moveltr 4000ms linear infinite"
+                              animation: "moveltr 4000ms linear infinite",
+                              transition: "background-color 1s ease-out",
+                              backgroundColor: `${color.primary}`
                           }
                       }}
             />
