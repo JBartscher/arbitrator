@@ -1,11 +1,15 @@
 "use client"
 
 import React, {useEffect, useState} from 'react';
-import {Progress, rem, Slider} from "@mantine/core";
-import {IconHeart, IconHeartBroken} from '@tabler/icons-react';
+import {Button, Progress, rem, Slider} from "@mantine/core";
+import {Heart, Heartbeat, HeartBroken, Settings} from "tabler-icons-react";
+import Link from "next/link";
+import NavButton from "@/app/components/NavButton";
 
 
 interface MoodMeterProps {
+    name: string
+    namePartner: string
     moodId: string
     mood: number
     updateMood: (id: string, value: number) => void
@@ -20,12 +24,16 @@ interface MoodSliderProps extends MoodMeterProps {
 const MoodSlider = ({moodId, mood, moodColor, updateMood, onMoodChange}: MoodSliderProps) => {
 
     const onMoodChangeEnd = (e: number) => {
-        console.log(e)
-        updateMood(moodId, e)
+        try {
+            updateMood(moodId, e)
+        } catch (e) {
+            console.log(e)
+        }
+
     }
 
     const MOOD_MARKS = [
-        {value: 0, label: 'Lass mich in Ruhe', icon: '🤬'},
+        {value: 0, label: 'Lass mich!', icon: '🤬'},
         {value: 25, label: 'Sauer', icon: '😡'},
         {value: 50, label: 'Verstimmt', icon: '🙄'},
         {value: 75, label: 'Bereit zu reden', icon: '😘'},
@@ -34,15 +42,15 @@ const MoodSlider = ({moodId, mood, moodColor, updateMood, onMoodChange}: MoodSli
 
     return (
         <Slider
-            className={"pb-8"}
+            className={"pb-8 pt-8 h-24"}
 
             value={mood}
             onChange={onMoodChange}
             onChangeEnd={onMoodChangeEnd}
 
             thumbSize={24}
-            thumbChildren={mood >= 50 ? <IconHeart color={moodColor.primary} size={rem(48)}/> :
-                <IconHeartBroken color={moodColor.primary} size={rem(48)}/>}
+            thumbChildren={mood >= 50 ? <Heart color={moodColor.primary} size={rem(48)}/> :
+                <HeartBroken color={moodColor.primary} size={rem(48)}/>}
 
             min={0}
             max={100}
@@ -71,7 +79,7 @@ const MoodSlider = ({moodId, mood, moodColor, updateMood, onMoodChange}: MoodSli
     )
 }
 
-const MoodMeter = ({moodId, mood = 100, updateMood}: MoodMeterProps) => {
+const MoodMeter = ({name, namePartner, moodId, mood = 100, updateMood}: MoodMeterProps) => {
 
     const [moodValue, setMoodValue] = useState(mood);
     const [inEditMode, setInEditMode] = useState(true);
@@ -97,11 +105,22 @@ const MoodMeter = ({moodId, mood = 100, updateMood}: MoodMeterProps) => {
 
     return (
         <>
+            <div className={"flex flex-row justify-between"}>
+                <NavButton btnTxt={"Was ich an dir Liebe"} to={`/${name}/was-wir-aneinander-haben`} icon={<Heartbeat size="1rem"/>}/>
+                <Button variant="filled"
+                        onClick={() => {
+                            setInEditMode(!inEditMode)
+                        }} leftIcon={<Settings size="1rem"/>}>Settings</Button>
+            </div>
             {inEditMode ?
                 <MoodSlider moodId={moodId}
                             mood={moodValue}
                             onMoodChange={setMoodValue}
-                            updateMood={updateMood} moodColor={color}/> : null}
+                            updateMood={updateMood}
+                            moodColor={color}
+                            name={name}
+                            namePartner={namePartner}/> :
+                <div className={"h-24 min-h-full"}/>}
             <Progress className={"h-16"}
                       value={moodValue}
                       aria-valuemin={0}
