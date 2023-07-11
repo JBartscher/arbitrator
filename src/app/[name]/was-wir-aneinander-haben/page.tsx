@@ -23,14 +23,15 @@ export default async function WhatWeHavePage({params: {name}}: Params) {
                 magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
                 clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
             </p>
+            <div className={"flex justify-center py-2 px-16"}>
             <Image
-                className={"relative py-2 px-16"}
                 src="/placeholder-relationship.jpg"
                 width={800}
                 height={500}
                 alt="Picture of the author"
                 style={{left: "calc(50% - 400px)"}}
             />
+            </div>
             <p className={"text-base py-2 px-8"}>
                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
                 labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et
