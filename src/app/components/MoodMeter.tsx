@@ -3,7 +3,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Progress, rem, Slider} from "@mantine/core";
 import {Heart, Heartbeat, HeartBroken, Settings} from "tabler-icons-react";
-import Link from "next/link";
 import NavButton from "@/app/components/NavButton";
 
 
@@ -32,13 +31,37 @@ const MoodSlider = ({moodId, mood, moodColor, updateMood, onMoodChange}: MoodSli
 
     }
 
-    const MOOD_MARKS = [
+    const [windowSize, setWindowSize] = useState([
+        window.innerWidth,
+        window.innerHeight,
+    ]);
+
+    useEffect(() => {
+        const handleWindowResize = () => {
+            setWindowSize([window.innerWidth, window.innerHeight]);
+        };
+        window.addEventListener('resize', handleWindowResize);
+        return () => {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    }, []);
+
+    const MOOD_MARKS_DESKTOP = [
         {value: 0, label: 'Lass mich!', icon: '🤬'},
         {value: 25, label: 'Sauer', icon: '😡'},
         {value: 50, label: 'Verstimmt', icon: '🙄'},
         {value: 75, label: 'Bereit zu reden', icon: '😘'},
         {value: 100, label: 'Entschuldigung!', icon: '🥰'},
     ];
+
+    const MOOD_MARKS_MOBILE = [
+        {value: 0, icon: 'Lass mich!', label: '🤬'},
+        {value: 25, icon: 'Sauer', label: '😡'},
+        {value: 50, icon: 'Verstimmt', label: '🙄'},
+        {value: 75, icon: 'Bereit zu reden', label: '😘'},
+        {value: 100, icon: 'Entschuldigung!', label: '🥰'},
+    ];
+
 
     return (
         <Slider
@@ -56,8 +79,9 @@ const MoodSlider = ({moodId, mood, moodColor, updateMood, onMoodChange}: MoodSli
             max={100}
             step={25}
             // @ts-ignore
-            label={(val) => MOOD_MARKS.find((mark) => mark.value === val).icon}
-            marks={MOOD_MARKS}
+            label={(val) => windowSize[0] >= 768 ? MOOD_MARKS_DESKTOP.find((mark) => mark.value === val).icon : MOOD_MARKS_MOBILE.find((mark) => mark.value === val).icon}
+            // @ts-ignore
+            marks={windowSize[0] >= 768 ? MOOD_MARKS_DESKTOP : MOOD_MARKS_MOBILE}
 
             labelTransition="skew-down"
             labelTransitionDuration={150}
@@ -82,7 +106,7 @@ const MoodSlider = ({moodId, mood, moodColor, updateMood, onMoodChange}: MoodSli
 const MoodMeter = ({name, namePartner, moodId, mood = 100, updateMood}: MoodMeterProps) => {
 
     const [moodValue, setMoodValue] = useState(mood);
-    const [inEditMode, setInEditMode] = useState(true);
+    const [inEditMode, setInEditMode] = useState(false);
     const [color, setColor] = useState({primary: '#489380', secondary: '#77dfa9'});
 
     const MOOD_COLORS = {
@@ -106,11 +130,12 @@ const MoodMeter = ({name, namePartner, moodId, mood = 100, updateMood}: MoodMete
     return (
         <>
             <div className={"flex flex-row justify-between"}>
-                <NavButton btnTxt={"Was ich an dir Liebe"} to={`/${name}/was-wir-aneinander-haben`} icon={<Heartbeat size="1rem"/>}/>
+                <NavButton btnTxt={"Was ich an dir Liebe"} to={`/${name}/was-wir-aneinander-haben`}
+                           icon={<Heartbeat size="1rem"/>}/>
                 <Button variant="filled"
                         onClick={() => {
                             setInEditMode(!inEditMode)
-                        }} leftIcon={<Settings size="1rem"/>}>Settings</Button>
+                        }} leftIcon={<Settings size="1rem"/>}>Ändern</Button>
             </div>
             {inEditMode ?
                 <MoodSlider moodId={moodId}
@@ -120,7 +145,7 @@ const MoodMeter = ({name, namePartner, moodId, mood = 100, updateMood}: MoodMete
                             moodColor={color}
                             name={name}
                             namePartner={namePartner}/> :
-                <div className={"h-24 min-h-full"}/>}
+                <div className={"min-h-full"}/>}
             <Progress className={"h-16"}
                       value={moodValue}
                       aria-valuemin={0}
@@ -139,6 +164,10 @@ const MoodMeter = ({name, namePartner, moodId, mood = 100, updateMood}: MoodMete
                           }
                       }}
             />
+            <div className={"flex flex-row justify-center pt-32"}>
+                <NavButton btnTxt={`Wie ist ${namePartner} drauf?`} to={`/${namePartner.toLowerCase()}`}
+                           icon={<Heart size="2rem"/>}/>
+            </div>
         </>
 
     )
