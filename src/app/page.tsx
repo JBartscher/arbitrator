@@ -1,8 +1,6 @@
 import {prisma} from "@/db";
 import Link from "next/link";
 import {capitalize} from "@/app/util";
-import {ArrowBearRight} from "tabler-icons-react";
-import {rem} from "@mantine/core";
 import React from "react";
 
 export const fetchCache = 'force-no-store';

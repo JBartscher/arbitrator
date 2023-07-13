@@ -3,7 +3,7 @@ import {capitalize} from "@/app/util";
 import MoodMeter from "@/app/components/MoodMeter";
 import React from "react";
 import Image from "next/image";
-import {redirect} from "next/navigation";
+import { revalidateTag } from 'next/cache'
 
 type Params = {
     params: {
@@ -23,8 +23,8 @@ async function updateSourness(id: string, value: number) {
     })
 
     console.log(updatedMood)
-    // this does only work in production
-    redirect(`/${updatedMood.name}`)
+
+    revalidateTag(`/${updatedMood.name}`)
 }
 
 
@@ -36,7 +36,7 @@ export default async function MoodPage({params: {name}}: Params) {
         }
     })
 
-    let image = ""
+    let image = "/peach.png"
     if (mood?.name === "nari" || mood?.name === "lisa") {
         image = "/peach.png"
     } else if (mood?.name === "jasper" || mood?.name === "fabiano") {
