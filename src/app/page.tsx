@@ -1,14 +1,26 @@
-export default function Home() {
+import {prisma} from "@/db";
+import Link from "next/link";
+import {capitalize} from "@/app/util";
+import {ArrowBearRight} from "tabler-icons-react";
+import {rem} from "@mantine/core";
+import React from "react";
 
-    const divStyle = {
-        color: 'blue',
-        width: '45%',
-    };
+export const fetchCache = 'force-no-store';
+export default async function Index() {
+
+    const moods = await prisma.sourness.findMany()
+
 
     return (
-        <div className={"grid grid-cols-1 md:grid-cols-2 gap-4 place-items-center"}>
-            <h1 className="magic">Hello</h1>
-            <progress className={"w-4/5 col-span-2"} id="progress" max={100} value={55}/>
-        </div>
+        <>
+            <h1 className="text-6xl p-16 text-center">All <span
+                className={"text-6xl text-rose-600"}>Mood</span> Items</h1>
+            <div className={"grid grid-cols-2 gap-4 justify-center items-center"}>
+                {moods.map(mood => <Link className={"text-center text-3xl"} key={mood.id}
+                                         href={`/${mood.name}`}>{capitalize(mood.name)}</Link>)}
+            </div>
+
+
+        </>
     )
 }
