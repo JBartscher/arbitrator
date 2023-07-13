@@ -11,6 +11,9 @@ type Params = {
     }
 }
 
+// refresh cache every siteload
+export const fetchCache = 'force-no-store';
+
 async function updateSourness(id: string, value: number) {
     "use server"
     console.log("calling update mood")
