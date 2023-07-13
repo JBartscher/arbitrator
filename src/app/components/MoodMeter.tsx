@@ -4,6 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Progress, rem, Slider} from "@mantine/core";
 import {Heart, Heartbeat, HeartBroken, Settings} from "tabler-icons-react";
 import NavButton from "@/app/components/NavButton";
+import {capitalize} from "@/app/util";
 
 
 interface MoodMeterProps {
@@ -130,12 +131,12 @@ const MoodMeter = ({name, namePartner, moodId, mood = 100, updateMood}: MoodMete
     return (
         <>
             <div className={"flex flex-row justify-between"}>
-                <NavButton btnTxt={"Was ich an dir Liebe"} to={`/${name}/was-wir-aneinander-haben`}
+                <NavButton className={"invisible"} btnTxt={"Was ich an dir Liebe"} to={`/${name}/was-wir-aneinander-haben`}
                            icon={<Heartbeat size="1rem"/>}/>
-                <Button variant="filled"
+                <Button className={"drop-shadow-2xl"} variant="filled"
                         onClick={() => {
                             setInEditMode(!inEditMode)
-                        }} leftIcon={<Settings size="1rem"/>}>Ändern</Button>
+                        }} leftIcon={<Settings size="1rem"/>}>Einstellen</Button>
             </div>
             {inEditMode ?
                 <MoodSlider moodId={moodId}
@@ -145,8 +146,8 @@ const MoodMeter = ({name, namePartner, moodId, mood = 100, updateMood}: MoodMete
                             moodColor={color}
                             name={name}
                             namePartner={namePartner}/> :
-                <div className={"min-h-full"}/>}
-            <Progress className={"h-16"}
+                <div className={"min-h-full h-24"}/>}
+            <Progress className={"h-16 drop-shadow-2xl"}
                       value={moodValue}
                       aria-valuemin={0}
                       aria-valuemax={100}
@@ -165,7 +166,7 @@ const MoodMeter = ({name, namePartner, moodId, mood = 100, updateMood}: MoodMete
                       }}
             />
             <div className={"flex flex-row justify-center pt-32"}>
-                <NavButton btnTxt={`Wie ist ${namePartner} drauf?`} to={`/${namePartner.toLowerCase()}`}
+                <NavButton btnTxt={`Wie ist ${capitalize(namePartner)} drauf?`} to={`/${namePartner.toLowerCase()}`}
                            icon={<Heart size="2rem"/>}/>
             </div>
         </>

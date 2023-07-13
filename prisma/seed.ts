@@ -7,7 +7,8 @@ async function main() {
             update: {},
             create: {
                 name: 'nari',
-                value: 100
+                value: 100,
+                partner: 'jasper'
             },
         }),
         prisma.sourness.upsert({
@@ -15,7 +16,8 @@ async function main() {
             update: {},
             create: {
                 name: 'lisa',
-                value: 100
+                value: 100,
+                partner: 'fabiano'
             },
         }),
         prisma.sourness.upsert({
@@ -23,7 +25,8 @@ async function main() {
             update: {},
             create: {
                 name: 'jasper',
-                value: 100
+                value: 100,
+                partner: 'nari'
             },
         }),
         prisma.sourness.upsert({
@@ -31,7 +34,8 @@ async function main() {
             update: {},
             create: {
                 name: 'fabiano',
-                value: 100
+                value: 100,
+                partner: 'lisa'
             },
         }),
     ])
