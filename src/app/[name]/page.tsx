@@ -3,6 +3,7 @@ import {capitalize} from "@/app/util";
 import MoodMeter from "@/app/components/MoodMeter";
 import React from "react";
 import Image from "next/image";
+import {redirect} from "next/navigation";
 
 type Params = {
     params: {
@@ -19,6 +20,8 @@ async function updateSourness(id: string, value: number) {
     })
 
     console.log(updatedMood)
+    // this does only work in production
+    redirect(`/${updatedMood.name}`)
 }
 
 
